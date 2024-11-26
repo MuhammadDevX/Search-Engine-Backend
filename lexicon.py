@@ -7,13 +7,20 @@ nlp = spacy.load("en_core_web_sm")
 
 
 # so i read the csv
-df = pd.read_csv("medium_articles.csv")  
+df = pd.read_csv("test.csv")  
 df = df.drop_duplicates()
 df = df.dropna()
 
 
+
+# title text url authors timestamp
+
 non_required_columns =["url","authors","timestamp"]
 filtered_df = df.drop(columns=non_required_columns)
+
+
+
+
 
 def process_tags(tags_text):
   tags = tags_text[1:-1].split(", ")
@@ -24,11 +31,16 @@ filtered_df['tags_text'] = filtered_df.tags.apply(process_tags)
 
 filtered_df["merged_text"] = filtered_df["title"] + " " + filtered_df["text"] + " " + filtered_df["tags_text"]
 
+
+# print(filtered_df["merged_text"])
+
 merged_text_df = filtered_df[["merged_text"]]
+
+
 
 merged_text_df.drop_duplicates()
 merged_text_df.reset_index(drop=True, inplace=True)
-merged_text_df.merged_text = merged_text_df.merged_text.str.astype(str)
+merged_text_df.merged_text = (merged_text_df.merged_text.astype(str))
 
 
 
@@ -88,3 +100,23 @@ print(clean_df.head())
 
 
 # # print("Tokenization Completed")
+
+#lexicon become 1 better 2 
+
+
+
+
+# forward 
+
+
+# docID () : [{1:}]
+
+# docID : [1,2,2,2,2,2,2]
+
+# reverse wordID -> lexicon 
+# wordID: [{url:word_weightage}] 
+# barrel -> invertedIndex ka chota hissa 
+# a-m  m-p 
+
+
+# wordID -> 
