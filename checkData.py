@@ -1,7 +1,8 @@
 import pandas as pd
 
-df =pd.read_csv("test.csv")
+df =pd.read_csv("lexicon_dict.csv")
 
-print(df.head())
+for word in df["Word"]:
+  print(word)
 
 print((df.columns))
