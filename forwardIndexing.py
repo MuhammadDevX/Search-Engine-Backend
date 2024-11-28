@@ -1,48 +1,37 @@
-import csv
-from collections import defaultdict
+import pandas as pd
 import string
+from collections import defaultdict
 
-# Initialize a dictionary to store the forward index
-forward_index = defaultdict(list)
+# Load lexicon into a dictionary
+lexicon_df = pd.read_csv('lexicon_dict.csv', encoding='utf-8')
+lexicon = { row["Word"]:str(row["WordID"]) for _, row in lexicon_df.iterrows()}
 
-# Load lexicon (wordID and word)
-lexicon = {}
-with open('D:\\DSA project\\Search-Engine-Backend\\lexicon_dict.csv', mode='r', encoding='utf-8') as lexicon_file:
-    lexicon_reader = csv.reader(lexicon_file)
-    next(lexicon_reader)  # Skip header if exists
-    for row in lexicon_reader:
-        word_id, word = row
-        lexicon[word.lower()] = int(word_id)  # Store lowercase word to ensure case-insensitivity
-
-# Function to preprocess text: remove punctuation, convert to lowercase
+# Preprocessing function to clean text
 def preprocess_text(text):
-    # Remove punctuation and convert to lowercase
     return text.translate(str.maketrans('', '', string.punctuation)).lower().split()
 
-# Process metadata.csv and build forward index
-with open('D:\\DSA project\\Search-Engine-Backend\\medium_articles.csv', mode='r', encoding='utf-8') as metadata_file:
-    metadata_reader = csv.DictReader(metadata_file)
-    for row in metadata_reader:
-        article_id = row['url']  # Assuming 'url' is used as the unique identifier for each article
-        text = row['text']  # Text of the article
-        
-        # Preprocess the text to remove punctuation and split into words
-        words_in_article = preprocess_text(text)
-        
-        # Add word IDs to the forward index
-        for word in words_in_article:
-            if word in lexicon:
-                word_id = lexicon[word]
-                forward_index[word_id].append(article_id)
+# Load articles and initialize forward index
+articles_df = pd.read_csv('cleaned_articles_test.csv')
+forward_index = defaultdict(list)
 
-# Save the forward index to a CSV file
-with open('D:\\DSA project\\Search-Engine-Backend\\forward_indexing.csv', mode='w', encoding='utf-8', newline='') as forward_index_file:
-    writer = csv.writer(forward_index_file)
-    writer.writerow(['WordID', 'ArticleURLs'])  # Write header
-    
-    # Sort WordIDs and process each word's articles
-    for word_id in sorted(forward_index.keys()):  # Sorting WordIDs
-        articles = sorted(set(forward_index[word_id]))  # Remove duplicates and sort article URLs
-        writer.writerow([word_id, ', '.join(articles)])  # Write WordID and sorted article URLs
+# Build the forward index
+for index, row in articles_df.iterrows():
+    # Extract and preprocess text
+    text = row['merged_text']
+    words_in_article = preprocess_text(text)
 
+    # Map words to word IDs and build the index
+    for word in words_in_article:
+        if word in lexicon:
+            word_id = lexicon[word]
+            forward_index[str(index)].append(int(word_id))  # Use the article index as docID
+
+# Prepare forward index for saving
+forward_index_df = pd.DataFrame({
+    'docID': forward_index.keys(),
+    'WordIDs': [(sorted((word_ids))) for word_ids in forward_index.values()]  
+})
+
+# Save forward index to CSV
+forward_index_df.to_csv('forward_indexing.csv', index = False, encoding = 'utf-8')
 print("Forward index saved to 'forward_indexing.csv'")
