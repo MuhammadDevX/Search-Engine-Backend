@@ -24,7 +24,7 @@ for index, row in articles_df.iterrows():
     for word in words_in_article:
         if word in lexicon:
             word_id = lexicon[word]
-            forward_index[str(index)].append(str(word_id))  # Use the article index as docID
+            forward_index[str(index)].append(int(word_id))  # Use the article index as docID
 
 # Prepare forward index for saving
 forward_index_df = pd.DataFrame({
