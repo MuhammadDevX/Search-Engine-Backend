@@ -6,6 +6,7 @@ df = df.drop_duplicates()
 df = df.dropna()
 
 # title text url authors timestamp
+
 non_required_columns =["url","authors","timestamp"]
 filtered_df = df.drop(columns=non_required_columns)
   
