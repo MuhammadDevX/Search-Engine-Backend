@@ -6,4 +6,3 @@ for word in df["Word"]:
   print(word)
 
 print((df.columns))
-
