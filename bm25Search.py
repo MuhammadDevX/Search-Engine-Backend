@@ -1,5 +1,6 @@
 import math
 import pandas as pd
+import os
 from collections import defaultdict
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
@@ -14,11 +15,11 @@ stop_words = set(stopwords.words('english'))
 lexicon_df = pd.read_csv('lexicon_dict.csv', encoding='utf-8')
 lexicon = {row["Word"]: str(row["WordID"]) for _, row in lexicon_df.iterrows()}
 
-inverted_index_df = pd.read_csv('inverted_indexing_array.csv', encoding='utf-8')
-inverted_index = {
-    str(row["WordID"]): ast.literal_eval(row["Postings"])
-    for _, row in inverted_index_df.iterrows()
-}
+# inverted_index_df = pd.read_csv('inverted_indexing_array.csv', encoding='utf-8')
+# inverted_index = {
+#     str(row["WordID"]): ast.literal_eval(row["Postings"])
+#     for _, row in inverted_index_df.iterrows()
+# }
 
 # Load document lengths for normalization
 forward_index_df = pd.read_csv('forward_indexing.csv', encoding='utf-8')
@@ -37,13 +38,36 @@ def preprocess_query(query):
     ]
     return lemmatized_query
 
+
+def load_word_postings(word_id):
+    
+    all_postings =[]
+    for barrel_file in sorted(os.listdir('barrels/')):
+        if barrel_file.startswith('barrel_') and barrel_file.endswith('.csv'):
+            barrel_path = os.path.join('barrels/', barrel_file)
+            barrel_df = pd.read_csv(barrel_path, encoding='utf-8')
+            
+            # Find postings for the specific word_id
+            word_postings = barrel_df[barrel_df['WordID'] == int(word_id)]
+            
+            for _, row in word_postings.iterrows():
+                # Assuming the postings are stored as a string representation of a list
+                postings = ast.literal_eval(row['Postings']) if pd.notna(row['Postings']) else []
+                all_postings.extend(postings)
+    
+    return all_postings
+    
+
+
+
+
 # BM25 score calculation
 def bm25_score(query_terms, doc_id):
     score = 0
     for term in query_terms:
         if term in lexicon:
             word_id = lexicon[term]
-            postings = inverted_index.get(word_id, [])
+            postings = load_word_postings(word_id)
             
             # Find the posting for the current document
             doc_posting = next((post for post in postings if post["DocID"] == doc_id), None)
@@ -59,6 +83,9 @@ def bm25_score(query_terms, doc_id):
                 score += idf * tf
     return score
 
+
+
+
 # BM25 search
 def bm25_search(query, top_n=10):
     query_terms = preprocess_query(query)
@@ -68,7 +95,7 @@ def bm25_search(query, top_n=10):
     for term in query_terms:
         if term in lexicon:
             word_id = lexicon[term]
-            postings = inverted_index.get(word_id, [])
+            postings = load_word_postings(word_id)
             
             for post in postings:
                 doc_id = post["DocID"]
