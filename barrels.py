@@ -1,11 +1,8 @@
 import pandas as pd
 import os
-
+from globalVariables import BARREL_SIZE
 # Load the sorted inverted index
 inverted_index_df = pd.read_csv('inverted_indexing_array.csv', encoding='utf-8')
-
-# Define the barrel size (word ID range per barrel)
-BARREL_SIZE = 1000  # Adjust as needed
 
 # Create a directory for storing barrels if not already existing
 os.makedirs("barrels", exist_ok=True)

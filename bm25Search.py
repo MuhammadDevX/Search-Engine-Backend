@@ -7,7 +7,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 import string
 import ast
-
+from globalVariables import BARREL_SIZE
 # Initialize lemmatizer and stopwords
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
@@ -40,7 +40,7 @@ def preprocess_query(query):
     return lemmatized_query
 
 
-def get_barrel_number (word_id,barrel_size = 1000):
+def get_barrel_number (word_id,barrel_size = BARREL_SIZE):
     return word_id//barrel_size +1
 
 def load_word_postings(word_id):
