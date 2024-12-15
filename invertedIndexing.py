@@ -1,9 +1,9 @@
 import pandas as pd
 from collections import defaultdict, Counter
-import ast  # Safe alternative to eval
+import ast 
 
 # Load the forward index
-forward_index_df = pd.read_csv(r'D:\DSA project\Search-Engine-Backend\forward_indexing.csv', encoding='utf-8')
+forward_index_df = pd.read_csv(r'forward_indexing.csv', encoding='utf-8')
 
 # Initialize the inverted index
 # Structure: { word_id: [{doc_id: freq}, ...], ... }
@@ -26,5 +26,5 @@ inverted_index_records = [{'WordID': word_id, 'Postings': inverted_index[word_id
 inverted_index_df = pd.DataFrame(inverted_index_records)
 
 # Save the inverted index to CSV in array form
-inverted_index_df.to_csv(r'D:\DSA project\Search-Engine-Backend\inverted_indexing_array.csv', index=False, encoding='utf-8')
+inverted_index_df.to_csv(r'inverted_indexing_array.csv', index=False, encoding='utf-8')
 print("Inverted index with array postings saved to 'inverted_indexing.csv'")

@@ -1,9 +1,9 @@
 import pandas as pd
 
 
-df = pd.read_csv("medium_articles.csv")
+df = pd.read_csv("../medium_articles.csv")
 
-df = df[1:5000]
+df = df[1:20]
 
 # now saving this dataframe
 
