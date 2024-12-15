@@ -6,9 +6,6 @@ from nltk.corpus import stopwords
 import string
 import ast
 
-# Download the necessary NLTK resources
-import nltk
-
 # Initialize lemmatizer and stopwords
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))

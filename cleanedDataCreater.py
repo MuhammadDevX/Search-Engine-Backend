@@ -9,7 +9,6 @@ df = pd.read_csv("test.csv")
 df = df.drop_duplicates().dropna()
 
 def process_tags(tags_text):
-  
   try:
     
     tags = tags_text[1:-1].split(", ")
