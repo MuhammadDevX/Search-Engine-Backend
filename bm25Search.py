@@ -1,4 +1,5 @@
 import math
+from turtle import back
 import pandas as pd
 import os
 from collections import defaultdict
@@ -39,27 +40,21 @@ def preprocess_query(query):
     return lemmatized_query
 
 
+def get_barrel_number (word_id,barrel_size = 1000):
+    return word_id//barrel_size +1
+
 def load_word_postings(word_id):
-    
     all_postings =[]
-    for barrel_file in sorted(os.listdir('barrels/')):
-        if barrel_file.startswith('barrel_') and barrel_file.endswith('.csv'):
-            barrel_path = os.path.join('barrels/', barrel_file)
-            barrel_df = pd.read_csv(barrel_path, encoding='utf-8')
-            
-            # Find postings for the specific word_id
-            word_postings = barrel_df[barrel_df['WordID'] == int(word_id)]
-            
-            for _, row in word_postings.iterrows():
-                # Assuming the postings are stored as a string representation of a list
-                postings = ast.literal_eval(row['Postings']) if pd.notna(row['Postings']) else []
-                all_postings.extend(postings)
+    barrel_num = get_barrel_number(int(word_id))
     
+    barrel_file = f'barrels/barrel_{barrel_num}.csv'
+    barrel_df = pd.read_csv(barrel_file, encoding='utf-8')
+    word_postings = barrel_df[barrel_df['WordID'] == int(word_id)]
+    
+    for _, row in word_postings.iterrows():
+        postings = ast.literal_eval(row['Postings']) if pd.notna(row['Postings']) else []
+        all_postings.extend(postings)
     return all_postings
-    
-
-
-
 
 # BM25 score calculation
 def bm25_score(query_terms, doc_id):
