@@ -9,7 +9,7 @@ non_required_columns =["url","authors","timestamp"]
 filtered_df = df.drop(columns=[col for col in non_required_columns if col in df.columns])
 
 
-# print(filtered_df.columns)
+# print(filtered_df.columns) added the hitlist part here
 def create_lexicon_and_hits(data):
   lexicon = {}
   hits = []

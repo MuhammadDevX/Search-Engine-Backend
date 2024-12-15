@@ -3,3 +3,5 @@ myenv/
 *.csv
 
 barrels/
+
+.vscode

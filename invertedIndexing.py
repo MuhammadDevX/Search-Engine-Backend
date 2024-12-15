@@ -2,7 +2,7 @@ import pandas as pd
 from collections import defaultdict
 import ast 
 
-# Load the forward index
+# load the forward index
 forward_index_df = pd.read_csv(r'forward_indexing.csv', encoding='utf-8')
 
 # Initialize the inverted index
@@ -10,7 +10,6 @@ forward_index_df = pd.read_csv(r'forward_indexing.csv', encoding='utf-8')
 
 inverted_index = defaultdict(list)
 
-# Build the inverted index with frequency counts
 for _, row in forward_index_df.iterrows():
     doc_id = str(row['docID'])
     word_occurrences = ast.literal_eval(row['WordOccurrences'])  
@@ -39,6 +38,6 @@ inverted_index_df = inverted_index_df.sort_values(by='WordID')
 
 
 
-# Save the inverted index to CSV in array form
+# save the inverted index to CSV in array form
 inverted_index_df.to_csv(r'inverted_indexing_array.csv', index=False, encoding='utf-8')
 print("Inverted index with proximity and hit types saved to 'inverted_indexing.csv'")

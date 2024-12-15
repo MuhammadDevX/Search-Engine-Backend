@@ -8,7 +8,6 @@ from nltk.corpus import stopwords
 import string
 import ast
 from globalVariables import BARREL_SIZE
-# Initialize lemmatizer and stopwords
 lemmatizer = WordNetLemmatizer()
 stop_words = set(stopwords.words('english'))
 
@@ -22,16 +21,16 @@ lexicon = {row["Word"]: str(row["WordID"]) for _, row in lexicon_df.iterrows()}
 #     for _, row in inverted_index_df.iterrows()
 # }
 
-# Load document lengths for normalization
+
 forward_index_df = pd.read_csv('forward_indexing.csv', encoding='utf-8')
 doc_lengths = {str(row['docID']): len(ast.literal_eval(row['WordOccurrences'])) for _, row in forward_index_df.iterrows()}
 avg_doc_length = sum(doc_lengths.values()) / len(doc_lengths)
 
-# BM25 parameters
+
 k1 = 1.5
 b = 0.75
 
-# Preprocess the query (lemmatization, stopword removal)
+
 def preprocess_query(query):
     query = query.translate(str.maketrans('', '', string.punctuation)).lower()
     lemmatized_query = [
@@ -56,7 +55,7 @@ def load_word_postings(word_id):
         all_postings.extend(postings)
     return all_postings
 
-# BM25 score calculation
+# this is for score calculation of bm25
 def bm25_score(query_terms, doc_id):
     score = 0
     for term in query_terms:
@@ -64,15 +63,15 @@ def bm25_score(query_terms, doc_id):
             word_id = lexicon[term]
             postings = load_word_postings(word_id)
             
-            # Find the posting for the current document
+           
             doc_posting = next((post for post in postings if post["DocID"] == doc_id), None)
             if doc_posting:
                 freq = len(doc_posting["Positions"])   
-                N = len(doc_lengths)  # Total number of documents
-                df = len(postings)   # Document frequency for the term
-                idf = math.log((N - df + 0.5) / (df + 0.5) + 1)  # IDF component
+                N = len(doc_lengths)  
+                df = len(postings)   
+                idf = math.log((N - df + 0.5) / (df + 0.5) + 1)  
                 
-                # BM25 formula
+                # formula
                 doc_len = doc_lengths[doc_id]
                 tf = freq * (k1 + 1) / (freq + k1 * (1 - b + b * (doc_len / avg_doc_length)))
                 score += idf * tf

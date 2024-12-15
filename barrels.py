@@ -1,21 +1,21 @@
 import pandas as pd
 import os
 from globalVariables import BARREL_SIZE
-# Load the sorted inverted index
+# loading the sorted inverted index
 inverted_index_df = pd.read_csv('inverted_indexing_array.csv', encoding='utf-8')
 
-# Create a directory for storing barrels if not already existing
+# Making a folder for the barrels
 os.makedirs("barrels", exist_ok=True)
 
-# Initialize variables for barrel segmentation
+# starting value for barrel id and start id
 current_barrel_id = 1
 current_start_id = 1
 
-# Function to determine barrel range
+# I will get aa barrel range from here 
 def get_barrel_id(word_id, barrel_size):
     return (word_id - 1) // barrel_size + 1
 
-# Process the inverted index to split into barrels
+# I will get the start id of the barrel from here
 for barrel_id, group in inverted_index_df.groupby(
     inverted_index_df['WordID'] // BARREL_SIZE
 ):
