@@ -1,0 +1,297 @@
+{
+  "113": {
+    "document_frequencies": {
+      "0": 1.0,
+      "1": 1.0,
+      "3": 6.0
+    },
+    "field_frequencies": {
+      "0": {
+        "text": 1
+      },
+      "1": {
+        "text": 1
+      },
+      "3": {
+        "text": 6
+      }
+    },
+    "positions": {
+      "0": [
+        301
+      ],
+      "1": [
+        297
+      ],
+      "3": [
+        106,
+        110,
+        118,
+        122,
+        146,
+        180
+      ]
+    },
+    "idf": 1.742969305058623,
+    "total_frequency": 8
+  },
+  "369": {
+    "document_frequencies": {
+      "0": 1.0
+    },
+    "field_frequencies": {
+      "0": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "0": [
+        379
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "625": {
+    "document_frequencies": {
+      "1": 1.0,
+      "7": 1.0,
+      "16": 1.0,
+      "18": 1.0
+    },
+    "field_frequencies": {
+      "1": {
+        "text": 1
+      },
+      "7": {
+        "text": 1
+      },
+      "16": {
+        "text": 1
+      },
+      "18": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "1": [
+        201
+      ],
+      "7": [
+        528
+      ],
+      "16": [
+        7
+      ],
+      "18": [
+        651
+      ]
+    },
+    "idf": 1.491654876777717,
+    "total_frequency": 4
+  },
+  "881": {
+    "document_frequencies": {
+      "4": 3.0
+    },
+    "field_frequencies": {
+      "4": {
+        "text": 3
+      }
+    },
+    "positions": {
+      "4": [
+        384,
+        387,
+        389
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 3
+  },
+  "1137": {
+    "document_frequencies": {
+      "5": 1.0
+    },
+    "field_frequencies": {
+      "5": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "5": [
+        536
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "1393": {
+    "document_frequencies": {
+      "6": 1.0
+    },
+    "field_frequencies": {
+      "6": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "6": [
+        488
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "1649": {
+    "document_frequencies": {
+      "8": 6.0
+    },
+    "field_frequencies": {
+      "8": {
+        "text": 6
+      }
+    },
+    "positions": {
+      "8": [
+        18,
+        28,
+        33,
+        319,
+        333,
+        520
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 6
+  },
+  "1905": {
+    "document_frequencies": {
+      "9": 1.0,
+      "11": 1.0,
+      "14": 1.0,
+      "16": 1.0
+    },
+    "field_frequencies": {
+      "9": {
+        "text": 1
+      },
+      "11": {
+        "text": 1
+      },
+      "14": {
+        "text": 1
+      },
+      "16": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "9": [
+        217
+      ],
+      "11": [
+        150
+      ],
+      "14": [
+        50
+      ],
+      "16": [
+        71
+      ]
+    },
+    "idf": 1.491654876777717,
+    "total_frequency": 4
+  },
+  "2161": {
+    "document_frequencies": {
+      "10": 1.0,
+      "18": 8.0
+    },
+    "field_frequencies": {
+      "10": {
+        "text": 1
+      },
+      "18": {
+        "text": 8
+      }
+    },
+    "positions": {
+      "10": [
+        267
+      ],
+      "18": [
+        175,
+        214,
+        292,
+        316,
+        347,
+        382,
+        600,
+        758
+      ]
+    },
+    "idf": 2.0794415416798357,
+    "total_frequency": 9
+  },
+  "2417": {
+    "document_frequencies": {
+      "12": 1.0
+    },
+    "field_frequencies": {
+      "12": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "12": [
+        32
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "2673": {
+    "document_frequencies": {
+      "13": 1.0
+    },
+    "field_frequencies": {
+      "13": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "13": [
+        214
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "2929": {
+    "document_frequencies": {
+      "16": 1.0,
+      "18": 3.0
+    },
+    "field_frequencies": {
+      "16": {
+        "text": 1
+      },
+      "18": {
+        "text": 3
+      }
+    },
+    "positions": {
+      "16": [
+        37
+      ],
+      "18": [
+        66,
+        401,
+        842
+      ]
+    },
+    "idf": 2.0794415416798357,
+    "total_frequency": 4
+  }
+}

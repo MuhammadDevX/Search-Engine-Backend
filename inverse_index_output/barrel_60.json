@@ -1,0 +1,372 @@
+{
+  "316": {
+    "document_frequencies": {
+      "0": 2.0,
+      "1": 2.0,
+      "6": 2.0,
+      "7": 6.0,
+      "8": 2.0,
+      "10": 3.0,
+      "11": 1.0,
+      "12": 1.0,
+      "14": 3.0,
+      "15": 1.0,
+      "17": 1.0
+    },
+    "field_frequencies": {
+      "0": {
+        "text": 2
+      },
+      "1": {
+        "text": 2
+      },
+      "6": {
+        "text": 2
+      },
+      "7": {
+        "text": 6
+      },
+      "8": {
+        "text": 2
+      },
+      "10": {
+        "text": 3
+      },
+      "11": {
+        "text": 1
+      },
+      "12": {
+        "text": 1
+      },
+      "14": {
+        "text": 3
+      },
+      "15": {
+        "text": 1
+      },
+      "17": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "0": [
+        104,
+        157
+      ],
+      "1": [
+        435,
+        454
+      ],
+      "6": [
+        37,
+        542
+      ],
+      "7": [
+        190,
+        261,
+        267,
+        551,
+        562,
+        628
+      ],
+      "8": [
+        424,
+        619
+      ],
+      "10": [
+        125,
+        518,
+        556
+      ],
+      "11": [
+        222
+      ],
+      "12": [
+        167
+      ],
+      "14": [
+        5,
+        191,
+        196
+      ],
+      "15": [
+        435
+      ],
+      "17": [
+        217
+      ]
+    },
+    "idf": 0.5533852381847866,
+    "total_frequency": 24
+  },
+  "60": {
+    "document_frequencies": {
+      "0": 1.0,
+      "16": 1.0
+    },
+    "field_frequencies": {
+      "0": {
+        "text": 1
+      },
+      "16": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "0": [
+        567
+      ],
+      "16": [
+        103
+      ]
+    },
+    "idf": 2.0794415416798357,
+    "total_frequency": 2
+  },
+  "572": {
+    "document_frequencies": {
+      "1": 1.0,
+      "15": 1.0,
+      "16": 1.0,
+      "17": 1.0,
+      "18": 1.0
+    },
+    "field_frequencies": {
+      "1": {
+        "text": 1
+      },
+      "15": {
+        "text": 1
+      },
+      "16": {
+        "text": 1
+      },
+      "17": {
+        "text": 1
+      },
+      "18": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "1": [
+        77
+      ],
+      "15": [
+        493
+      ],
+      "16": [
+        75
+      ],
+      "17": [
+        58
+      ],
+      "18": [
+        346
+      ]
+    },
+    "idf": 1.2909841813155658,
+    "total_frequency": 5
+  },
+  "828": {
+    "document_frequencies": {
+      "4": 1.0,
+      "7": 2.0,
+      "13": 1.0
+    },
+    "field_frequencies": {
+      "4": {
+        "text": 1
+      },
+      "7": {
+        "text": 2
+      },
+      "13": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "4": [
+        172
+      ],
+      "7": [
+        8,
+        80
+      ],
+      "13": [
+        113
+      ]
+    },
+    "idf": 1.742969305058623,
+    "total_frequency": 4
+  },
+  "1084": {
+    "document_frequencies": {
+      "5": 1.0
+    },
+    "field_frequencies": {
+      "5": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "5": [
+        349
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "1340": {
+    "document_frequencies": {
+      "6": 1.0
+    },
+    "field_frequencies": {
+      "6": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "6": [
+        567
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "1596": {
+    "document_frequencies": {
+      "7": 1.0,
+      "13": 1.0,
+      "15": 1.0
+    },
+    "field_frequencies": {
+      "7": {
+        "text": 1
+      },
+      "13": {
+        "text": 1
+      },
+      "15": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "7": [
+        315
+      ],
+      "13": [
+        10
+      ],
+      "15": [
+        37
+      ]
+    },
+    "idf": 1.742969305058623,
+    "total_frequency": 3
+  },
+  "1852": {
+    "document_frequencies": {
+      "8": 1.0
+    },
+    "field_frequencies": {
+      "8": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "8": [
+        328
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "2108": {
+    "document_frequencies": {
+      "10": 2.0
+    },
+    "field_frequencies": {
+      "10": {
+        "text": 2
+      }
+    },
+    "positions": {
+      "10": [
+        203,
+        242
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 2
+  },
+  "2620": {
+    "document_frequencies": {
+      "12": 1.0
+    },
+    "field_frequencies": {
+      "12": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "12": [
+        64
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "2364": {
+    "document_frequencies": {
+      "12": 2.0
+    },
+    "field_frequencies": {
+      "12": {
+        "text": 2
+      }
+    },
+    "positions": {
+      "12": [
+        470,
+        473
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 2
+  },
+  "2876": {
+    "document_frequencies": {
+      "15": 1.0
+    },
+    "field_frequencies": {
+      "15": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "15": [
+        316
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  },
+  "3132": {
+    "document_frequencies": {
+      "18": 1.0
+    },
+    "field_frequencies": {
+      "18": {
+        "text": 1
+      }
+    },
+    "positions": {
+      "18": [
+        631
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 1
+  }
+}
