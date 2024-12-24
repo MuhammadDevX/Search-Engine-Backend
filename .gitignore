@@ -9,6 +9,7 @@ inverse_index_output/
 lexicon_output/
 
 .vscode
+
 forward_index_output/forward_index_batch_0.json
 inverse_index_output/barrel_0.json
 inverse_index_output/barrel_1.json
