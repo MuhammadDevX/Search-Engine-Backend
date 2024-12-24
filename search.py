@@ -1,15 +1,11 @@
-import json
 import numpy as np
-from typing import Dict, List, Tuple, Set
 from collections import defaultdict
 import Levenshtein
-from nltk.corpus import wordnet
 import heapq
 from preprocessAndLexiconGen import LexiconLoader, TextPreprocessor
 from forwardIndexGenerator import ForwardIndexLoader
 from invertedIndexGenerator import InverseIndexLoader
-import numpy as np
-from typing import Dict, List, Tuple, Set
+from typing import Dict, List, Tuple
 def vector_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
     """
     Calculate similarity between two vectors using dot product and magnitude.
@@ -284,7 +280,7 @@ class SearchEngine:
                     for original_term, similar_list in similar_terms.items():
                         if term in similar_list:
                             # Reduce score for similar terms
-                            similarity_factor = 0.5
+                            similarity_factor = 0.1
                             break
                 
                 doc_scores[doc_id] += bm25_score * similarity_factor
@@ -339,8 +335,8 @@ def main():
     )
     
     # Example search
-    query = "learning"
-    results = search_engine.search(query, max_results=5)
+    query = "mindd nnose"
+    results = search_engine.search(query, max_results=10)
     
     # Print results
     print(f"Search results for: {query}\n")

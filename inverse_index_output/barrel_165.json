@@ -10,8 +10,8 @@
     },
     "positions": {
       "0": [
-        52,
-        61
+        227,
+        553
       ]
     },
     "idf": 2.5902671654458267,
@@ -28,7 +28,7 @@
     },
     "positions": {
       "1": [
-        316
+        300
       ]
     },
     "idf": 2.5902671654458267,
@@ -36,20 +36,41 @@
   },
   "421": {
     "document_frequencies": {
-      "1": 1.0
+      "1": 1.0,
+      "8": 1.0,
+      "10": 1.0,
+      "13": 1.0
     },
     "field_frequencies": {
       "1": {
+        "text": 1
+      },
+      "8": {
+        "text": 1
+      },
+      "10": {
+        "text": 1
+      },
+      "13": {
         "text": 1
       }
     },
     "positions": {
       "1": [
-        456
+        341
+      ],
+      "8": [
+        148
+      ],
+      "10": [
+        91
+      ],
+      "13": [
+        248
       ]
     },
-    "idf": 2.5902671654458267,
-    "total_frequency": 1
+    "idf": 1.491654876777717,
+    "total_frequency": 4
   },
   "933": {
     "document_frequencies": {
@@ -62,7 +83,7 @@
     },
     "positions": {
       "4": [
-        258
+        176
       ]
     },
     "idf": 2.5902671654458267,
@@ -101,82 +122,91 @@
   },
   "1445": {
     "document_frequencies": {
-      "7": 4.0
-    },
-    "field_frequencies": {
-      "7": {
-        "text": 4
-      }
-    },
-    "positions": {
-      "7": [
-        570,
-        578,
-        648,
-        669
-      ]
-    },
-    "idf": 2.5902671654458267,
-    "total_frequency": 4
-  },
-  "1701": {
-    "document_frequencies": {
-      "8": 2.0
-    },
-    "field_frequencies": {
-      "8": {
-        "text": 2
-      }
-    },
-    "positions": {
-      "8": [
-        21,
-        45
-      ]
-    },
-    "idf": 2.5902671654458267,
-    "total_frequency": 2
-  },
-  "1957": {
-    "document_frequencies": {
-      "9": 1.0,
+      "7": 2.0,
       "12": 1.0
     },
     "field_frequencies": {
-      "9": {
-        "text": 1
+      "7": {
+        "text": 2
       },
       "12": {
         "text": 1
       }
     },
     "positions": {
-      "9": [
-        415
+      "7": [
+        160,
+        611
       ],
       "12": [
-        596
+        602
       ]
     },
     "idf": 2.0794415416798357,
-    "total_frequency": 2
+    "total_frequency": 3
   },
-  "2213": {
+  "1701": {
     "document_frequencies": {
-      "10": 1.0
+      "8": 1.0
     },
     "field_frequencies": {
-      "10": {
+      "8": {
         "text": 1
       }
     },
     "positions": {
-      "10": [
-        168
+      "8": [
+        585
       ]
     },
     "idf": 2.5902671654458267,
     "total_frequency": 1
+  },
+  "1957": {
+    "document_frequencies": {
+      "9": 2.0,
+      "18": 4.0
+    },
+    "field_frequencies": {
+      "9": {
+        "text": 2
+      },
+      "18": {
+        "text": 4
+      }
+    },
+    "positions": {
+      "9": [
+        224,
+        261
+      ],
+      "18": [
+        31,
+        391,
+        420,
+        649
+      ]
+    },
+    "idf": 2.0794415416798357,
+    "total_frequency": 6
+  },
+  "2213": {
+    "document_frequencies": {
+      "10": 2.0
+    },
+    "field_frequencies": {
+      "10": {
+        "text": 2
+      }
+    },
+    "positions": {
+      "10": [
+        158,
+        179
+      ]
+    },
+    "idf": 2.5902671654458267,
+    "total_frequency": 2
   },
   "2469": {
     "document_frequencies": {
@@ -189,7 +219,7 @@
     },
     "positions": {
       "12": [
-        527
+        563
       ]
     },
     "idf": 2.5902671654458267,
@@ -197,20 +227,27 @@
   },
   "2725": {
     "document_frequencies": {
-      "14": 1.0
+      "14": 1.0,
+      "15": 1.0
     },
     "field_frequencies": {
       "14": {
+        "text": 1
+      },
+      "15": {
         "text": 1
       }
     },
     "positions": {
       "14": [
-        181
+        255
+      ],
+      "15": [
+        625
       ]
     },
-    "idf": 2.5902671654458267,
-    "total_frequency": 1
+    "idf": 2.0794415416798357,
+    "total_frequency": 2
   },
   "2981": {
     "document_frequencies": {
@@ -223,7 +260,7 @@
     },
     "positions": {
       "17": [
-        188
+        110
       ]
     },
     "idf": 2.5902671654458267,
