@@ -2,6 +2,10 @@ myenv/
 
 *.csv
 
-barrels/
+forward_index_output/
+
+inverse_index_output/
+
+lexicon_output/
 
 .vscode
