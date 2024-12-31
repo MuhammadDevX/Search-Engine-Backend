@@ -1,352 +1,215 @@
-import numpy as np
-from collections import defaultdict
-import Levenshtein
 import heapq
+import pandas as pd
+from collections import defaultdict
+import json
+import os
+import numpy as np
+from typing import Dict, List
 from preprocessAndLexiconGen import LexiconLoader, TextPreprocessor
-from forwardIndexGenerator import ForwardIndexLoader
-from invertedIndexGenerator import InverseIndexLoader
-from typing import Dict, List, Tuple
-def vector_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
-    """
-    Calculate similarity between two vectors using dot product and magnitude.
-    This is essentially a manual implementation of cosine similarity.
-    """
-    # Calculate dot product
-    dot_product = np.dot(vec1, vec2)
-    
-    # Calculate magnitudes
-    magnitude1 = np.sqrt(np.sum(vec1 ** 2))
-    magnitude2 = np.sqrt(np.sum(vec2 ** 2))
-    
-    # Avoid division by zero
-    if magnitude1 == 0 or magnitude2 == 0:
-        return 0.0
-        
-    # Calculate cosine similarity
-    return dot_product / (magnitude1 * magnitude2)
 
 class QueryProcessor:
-    def __init__(self, lexicon_loader: LexiconLoader, text_preprocessor: TextPreprocessor):
+    def __init__(self, lexicon_loader, text_preprocessor):
         self.lexicon = lexicon_loader
-        self.text_preprocessor = text_preprocessor
-        self.word_embeddings = self._load_word_embeddings()
-        
-    def _load_word_embeddings(self) -> Dict[str, np.ndarray]:
-        """Load or generate word embeddings for similarity comparison."""
-        # In practice, you would load pre-trained embeddings
-        # For this example, we'll create simple term frequency based embeddings
-        embeddings = {}
-        for word in self.lexicon.word_to_id.keys():
-            stats = self.lexicon.get_word_stats(word)
-            if stats:
-                # Create a simple embedding based on term statistics
-                embedding = np.array([
-                    stats.get('doc_frequency', 0),
-                    sum(stats.get('field_frequencies', {}).values()),
-                    len(stats.get('document_occurrences', set()))
-                ])
-                embeddings[word] = embedding / np.linalg.norm(embedding)
-        return embeddings
+        self.preprocessor = text_preprocessor
     
-    def correct_spelling(self, word: str, max_distance: int = 2) -> str:
-        """Correct spelling using Levenshtein distance."""
-        if word in self.lexicon.word_to_id:
-            return word
-            
-        candidates = []
-        for dict_word in self.lexicon.word_to_id.keys():
-            distance = Levenshtein.distance(word, dict_word)
-            if distance <= max_distance:
-                candidates.append((dict_word, distance))
-        
-        if candidates:
-            return min(candidates, key=lambda x: x[1])[0]
-        return word
-    
-    def find_similar_words(self, word: str, threshold: float = 0.7) -> List[str]:
-        """Find similar words using custom vector similarity."""
-        if word not in self.word_embeddings:
-            return []
-            
-        word_vector = self.word_embeddings[word]
-        similar_words = []
-        
-        for other_word, other_vector in self.word_embeddings.items():
-            if other_word != word:
-                # Use our custom similarity function instead of sklearn's cosine_similarity
-                similarity = vector_similarity(word_vector, other_vector)
-                if similarity >= threshold:
-                    similar_words.append((other_word, similarity))
-        
-        # Return top 5 similar words
-        return [word for word, _ in sorted(similar_words, key=lambda x: x[1], reverse=True)[:5]]
-      
-    def process_query(self, query: str) -> Tuple[List[str], Dict[str, List[str]]]:
-        """Process query with spelling correction and similar words."""
-        # Preprocess query
-        processed_query = self.text_preprocessor.clean_and_lemmatize(query)
-        query_terms = processed_query.split()
-        
-        # Correct spellings and find similar words
-        corrected_terms = []
-        similar_terms = {}
-        
-        for term in query_terms:
-            # Correct spelling
-            corrected_term = self.correct_spelling(term)
-            corrected_terms.append(corrected_term)
-            
-            # Find similar words
-            similar_terms[corrected_term] = self.find_similar_words(corrected_term)
-        
-        return corrected_terms, similar_terms
+    def process_query(self, query: str) -> List[str]:
+        # Preprocess the query text
+        processed_terms = self.preprocessor.clean_and_lemmatize(self.preprocessor.clean_characters(query)).split()
+        # Filter out terms not in lexicon
+        valid_terms = [term for term in processed_terms 
+                      if self.lexicon.get_word_id(term) != -1]
+        return valid_terms
 
-# class QueryProcessor:
-#     def __init__(self, lexicon_loader: LexiconLoader, text_preprocessor: TextPreprocessor):
-#         self.lexicon = lexicon_loader
-#         self.text_preprocessor = text_preprocessor
-#         self.word_embeddings = self._load_word_embeddings()
-        
-#     def _load_word_embeddings(self) -> Dict[str, np.ndarray]:
-#         """Load or generate word embeddings for similarity comparison."""
-#         # In practice, you would load pre-trained embeddings
-#         # For this example, we'll create simple term frequency based embeddings
-#         embeddings = {}
-#         for word in self.lexicon.word_to_id.keys():
-#             stats = self.lexicon.get_word_stats(word)
-#             if stats:
-#                 # Create a simple embedding based on term statistics
-#                 embedding = np.array([
-#                     stats.get('doc_frequency', 0),
-#                     sum(stats.get('field_frequencies', {}).values()),
-#                     len(stats.get('document_occurrences', set()))
-#                 ])
-#                 embeddings[word] = embedding / np.linalg.norm(embedding)
-#         return embeddings
+class DocumentRetriever:
+    def __init__(self, dataset_path: str):
+        self.df = pd.read_csv(dataset_path)
+        # Ensure all expected columns exist
+        required_cols = ['title', 'text', 'url', 'authors', 'timestamp', 'tags']
+        for col in required_cols:
+            if col not in self.df.columns:
+                self.df[col] = ''
     
-#     def correct_spelling(self, word: str, max_distance: int = 2) -> str:
-#         """Correct spelling using Levenshtein distance."""
-#         if word in self.lexicon.word_to_id:
-#             return word
-            
-#         candidates = []
-#         for dict_word in self.lexicon.word_to_id.keys():
-#             distance = Levenshtein.distance(word, dict_word)
-#             if distance <= max_distance:
-#                 candidates.append((dict_word, distance))
-        
-#         if candidates:
-#             return min(candidates, key=lambda x: x[1])[0]
-#         return word
+    def get_document_preview(self, doc_id: str) -> Dict[str, str]:
+        try:
+            doc = self.df.iloc[int(doc_id)]
+            return {
+                'title': str(doc['title']),
+                'text': str(doc['text'])[:200],
+                'url': str(doc['url']),
+                'authors': str(doc['authors']),
+                'timestamp': str(doc['timestamp']),
+                'tags': str(doc['tags'])
+            }
+        except:
+            return {key: '' for key in ['title', 'text', 'url', 'authors', 'timestamp', 'tags']}
     
-#     def find_similar_words(self, word: str, threshold: float = 0.7) -> List[str]:
-#         """Find similar words using cosine similarity."""
-#         if word not in self.word_embeddings:
-#             return []
-            
-#         word_vector = self.word_embeddings[word]
-#         similar_words = []
+    def get_full_document(self, doc_id: str) -> Dict[str, str]:
+        try:
+            doc = self.df.iloc[int(doc_id)]
+            return {
+                'title': str(doc['title']),
+                'text': str(doc['text']),
+                'url': str(doc['url']),
+                'authors': str(doc['authors']),
+                'timestamp': str(doc['timestamp']),
+                'tags': str(doc['tags'])
+            }
+        except:
+            return None
+
+class InvertedIndexSearcher:
+    def __init__(self, index_dir: str, lexicon_loader: LexiconLoader):
+        self.index_dir = index_dir
+        self.lexicon = lexicon_loader
         
-#         for other_word, other_vector in self.word_embeddings.items():
-#             if other_word != word:
-#                 similarity = cosine_similarity(
-#                     word_vector.reshape(1, -1),
-#                     other_vector.reshape(1, -1)
-#                 )[0][0]
-#                 if similarity >= threshold:
-#                     similar_words.append((other_word, similarity))
+        with open(os.path.join(index_dir, 'inverted_index_metadata.json'), 'r') as f:
+            self.metadata = json.load(f)
         
-#         # Return top 5 similar words
-#         return [word for word, _ in sorted(similar_words, key=lambda x: x[1], reverse=True)[:5]]
+        self.barrel_ranges = self.metadata['barrel_ranges']
+        self.barrel_cache = {}
     
-#     def process_query(self, query: str) -> Tuple[List[str], Dict[str, List[str]]]:
-#         """Process query with spelling correction and similar words."""
-#         # Preprocess query
-#         processed_query = self.text_preprocessor.clean_and_lemmatize(query)
-#         query_terms = processed_query.split()
-        
-#         # Correct spellings and find similar words
-#         corrected_terms = []
-#         similar_terms = {}
-        
-#         for term in query_terms:
-#             # Correct spelling
-#             corrected_term = self.correct_spelling(term)
-#             corrected_terms.append(corrected_term)
+    def _get_barrel_id(self, word_id: int) -> int:
+        for i, (start_id, end_id) in enumerate(self.barrel_ranges):
+            if start_id <= word_id <= end_id:
+                return i
+        return -1
+    
+    def _load_barrel(self, barrel_id: int) -> Dict:
+        if barrel_id not in self.barrel_cache:
+            barrel_path = os.path.join(self.index_dir, f'barrel_{barrel_id}.json')
+            with open(barrel_path, 'r') as f:
+                self.barrel_cache = json.load(f)
+        return self.barrel_cache
+    
+    def get_term_data(self, word: str) -> Dict:
+        word_id = self.lexicon.get_word_id(word)
+        if word_id == -1:
+            return {}
             
-#             # Find similar words
-#             similar_terms[corrected_term] = self.find_similar_words(corrected_term)
-        
-#         return corrected_terms, similar_terms
+        barrel_id = self._get_barrel_id(word_id)
+        if barrel_id == -1:
+            return {}
+            
+        barrel = self._load_barrel(barrel_id)
+        return barrel.get(str(word_id), {})
+    
+    def get_positions(self, word: str, doc_id: str) -> List[int]:
+        term_data = self.get_term_data(word)
+        return term_data.get(doc_id, {}).get('positions', [])
+    
+    def get_field_frequencies(self, word: str, doc_id: str) -> Dict[str, int]:
+        term_data = self.get_term_data(word)
+        return term_data.get(doc_id, {}).get('field_counts', {})
+    
+    def get_document_frequency(self, word: str) -> int:
+        term_data = self.get_term_data(word)
+        return len(term_data) if term_data else 0
+    
+    def get_idf(self, word: str) -> float:
+        doc_freq = self.get_document_frequency(word)
+        if doc_freq == 0:
+            return 0.0
+        return np.log(self.metadata['total_terms'] / (1 + doc_freq))
 
 class SearchEngine:
-    def __init__(self, 
-                 inverse_index_loader: InverseIndexLoader,
-                 forward_index_loader: ForwardIndexLoader,
+    def __init__(self, inverted_searcher: InvertedIndexSearcher, 
+                 doc_retriever: DocumentRetriever, 
                  query_processor: QueryProcessor):
-        self.inverse_index = inverse_index_loader
-        self.forward_index = forward_index_loader
+        self.inverted_searcher = inverted_searcher
+        self.doc_retriever = doc_retriever
         self.query_processor = query_processor
+        self.field_weights = {
+            'title': 3.0,
+            'text': 1.0,
+            'authors': 1.5,
+            'tags': 2.0
+        }
+    
+    def _calculate_bm25_score(self, term: str, doc_id: str) -> float:
+        field_freqs = self.inverted_searcher.get_field_frequencies(term, doc_id)
+        weighted_tf = sum(freq * self.field_weights.get(field, 1.0)
+                         for field, freq in field_freqs.items())
         
-    def _calculate_bm25_score(self, 
-                             term: str, 
-                             doc_id: str,
-                             field_weights: Dict[str, float] = None) -> float:
-        """Calculate BM25 score for a term-document pair."""
-        if field_weights is None:
-            field_weights = {'title': 3.0, 'text': 1.0, 'tags': 2.0}
-            
-        k1 = 1.5
-        b = 0.75
+        idf = self.inverted_searcher.get_idf(term)
+        k1, b = 1.5, 0.75
         
-        # Get document length and average document length
-        doc_length = self.forward_index.get_document_size(doc_id)
-        avg_doc_length = self.forward_index.get_average_document_size()
-        
-        # Get term frequencies in different fields
-        field_freqs = self.inverse_index.get_field_frequencies(term, doc_id)
-        
-        # Calculate weighted term frequency
-        weighted_tf = sum(
-            freq * field_weights.get(field, 1.0)
-            for field, freq in field_freqs.items()
-        )
-        
-        # Get IDF score
-        idf = self.inverse_index.get_idf(term)
-        
-        # Calculate BM25 score
         numerator = weighted_tf * (k1 + 1)
-        denominator = weighted_tf + k1 * (1 - b + b * doc_length / avg_doc_length)
+        denominator = weighted_tf + k1
         
         return idf * numerator / denominator
     
-    def _calculate_proximity_score(self, 
-                                 terms: List[str], 
-                                 doc_id: str,
-                                 window_size: int = 10) -> float:
-        """Calculate proximity score for multiple terms."""
-        positions = [
-            self.inverse_index.get_positions(term, doc_id)
-            for term in terms
-        ]
-        
+    def _calculate_proximity_score(self, terms: List[str], doc_id: str, window_size: int = 10) -> float:
+        positions = [self.inverted_searcher.get_positions(term, doc_id) for term in terms]
         if not all(positions):
             return 0.0
             
-        # Find minimum distance between all terms
         min_distance = float('inf')
         for positions_combination in zip(*positions):
-            max_pos = max(positions_combination)
-            min_pos = min(positions_combination)
-            distance = max_pos - min_pos
-            if distance < min_distance:
-                min_distance = distance
+            distance = max(positions_combination) - min(positions_combination)
+            min_distance = min(min_distance, distance)
         
-        # Convert distance to score (closer terms get higher scores)
-        if min_distance >= window_size:
-            return 0.0
-        return 1.0 - (min_distance / window_size)
+        return 1.0 - min(1.0, min_distance / window_size)
     
-    def search(self, 
-              query: str, 
-              max_results: int = 10,
-              window_size: int = 10) -> List[Dict]:
-        """
-        Search for documents matching the query.
-        Returns list of documents with titles, texts, and URLs.
-        """
-        # Process query
-        corrected_terms, similar_terms = self.query_processor.process_query(query)
-        
-        # Collect all terms to search (original + similar)
-        all_terms = set(corrected_terms)
-        for term_similars in similar_terms.values():
-            all_terms.update(term_similars)
-        
-        # Calculate scores for each document
+    def search(self, query: str, max_results: int = 10) -> List[Dict]:
+        processed_terms = self.query_processor.process_query(query)
         doc_scores = defaultdict(float)
         
-        # Score documents containing query terms
-        for term in all_terms:
-            term_data = self.inverse_index.get_term_data(term)
-            for doc_id in term_data.get('document_frequencies', {}):
-                # Calculate BM25 score
-                bm25_score = self._calculate_bm25_score(term, doc_id)
-                
-                # Add similarity factor if term is similar (not exact)
-                similarity_factor = 1.0
-                if term not in corrected_terms:
-                    for original_term, similar_list in similar_terms.items():
-                        if term in similar_list:
-                            # Reduce score for similar terms
-                            similarity_factor = 0.1
-                            break
-                
-                doc_scores[doc_id] += bm25_score * similarity_factor
+        for term in processed_terms:
+            term_data = self.inverted_searcher.get_term_data(term)
+            for doc_id in term_data:
+                if doc_id != 'metadata':
+                    # Calculate BM25 score
+                    doc_scores[doc_id] += self._calculate_bm25_score(term, doc_id)
+                    
+                    # Add temporal boost for newer documents
+                    doc_preview = self.doc_retriever.get_document_preview(doc_id)
         
-        # Add proximity bonus for multi-term queries
-        if len(corrected_terms) > 1:
+        # Add proximity boost for multi-term queries
+        if len(processed_terms) > 1:
             for doc_id in doc_scores:
-                proximity_score = self._calculate_proximity_score(
-                    corrected_terms, doc_id, window_size
-                )
+                proximity_score = self._calculate_proximity_score(processed_terms, doc_id)
                 doc_scores[doc_id] *= (1 + proximity_score)
         
-        # Get top documents
-        top_docs = heapq.nlargest(
-            max_results,
-            doc_scores.items(),
-            key=lambda x: x[1]
-        )
+        top_docs = heapq.nlargest(max_results, doc_scores.items(), key=lambda x: x[1])
         
-        # Fetch document contents
         results = []
         for doc_id, score in top_docs:
-            doc_metadata = self.forward_index.get_document_metadata(doc_id)
+            doc_preview = self.doc_retriever.get_document_preview(doc_id)
             results.append({
                 'doc_id': doc_id,
-                'title': doc_metadata.get('title', ''),
-                'text': doc_metadata.get('text', ''),
-                'url': doc_metadata.get('url', ''),
+                'title': doc_preview['title'],
+                'text': doc_preview['text'],
+                'url': doc_preview['url'],
+                'authors': doc_preview['authors'],
+                'timestamp': doc_preview['timestamp'],
+                'tags': doc_preview['tags'],
                 'score': score,
-                'matched_terms': [
-                    term for term in all_terms
-                    if self.inverse_index.get_document_frequency(term, doc_id) > 0
-                ]
+                'matched_terms': processed_terms
             })
         
         return results
 
 def main():
-    """Example usage of the search engine."""
-    # Initialize components
     lexicon_loader = LexiconLoader("lexicon_output")
     text_preprocessor = TextPreprocessor()
-    inverse_index_loader = InverseIndexLoader("inverse_index_output", lexicon_loader)
-    forward_index_loader = ForwardIndexLoader("forward_index_output", lexicon_loader)
+    inverted_searcher = InvertedIndexSearcher("inverted_index_output", lexicon_loader)
+    doc_retriever = DocumentRetriever("test.csv")
     
-    # Initialize query processor and search engine
     query_processor = QueryProcessor(lexicon_loader, text_preprocessor)
-    search_engine = SearchEngine(
-        inverse_index_loader,
-        forward_index_loader,
-        query_processor
-    )
+    search_engine = SearchEngine(inverted_searcher, doc_retriever, query_processor)
     
-    # Example search
-    query = "mindd nnose"
-    results = search_engine.search(query, max_results=10)
+    query = "machine learning tutorials and here you go"
+    results = search_engine.search(query)
     
-    # Print results
-    print(f"Search results for: {query}\n")
+    print(f"\nResults for query: '{query}'\n" + "="*50)
     for i, result in enumerate(results, 1):
-        print(f"Result {i}:")
-        print(f"Title: {result['title']}")
+        print(f"\n{i}. {result['title']}")
         print(f"URL: {result['url']}")
+        print(f"Authors: {result['authors']}")
+        print(f"Date: {result['timestamp']}")
+        print(f"Tags: {result['tags']}")
         print(f"Score: {result['score']:.4f}")
-        print(f"Matched terms: {', '.join(result['matched_terms'])}")
-        print(f"Text preview: {result['text'][:200]}...\n")
+        print(f"Preview: {result['text']}...")
 
 if __name__ == "__main__":
     main()
