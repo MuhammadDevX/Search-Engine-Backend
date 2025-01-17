@@ -2,6 +2,7 @@ myenv/
 
 *.csv
 *.json
+processed_articles.json
 forward_index_output/
 inverted_index_output/
 lexicon_output/
