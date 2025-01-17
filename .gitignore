@@ -1,12 +1,10 @@
 myenv/
 
 *.csv
-
+*.json
 forward_index_output/
-
 inverted_index_output/
-
-search.rar
 lexicon_output/
+search.rar
 
 .vscode

@@ -7,12 +7,11 @@ from typing import Dict, Set, List
 import json
 import os
 from collections import defaultdict
-
+import time
 class TextPreprocessor:
     def __init__(self):
         self.stop_words = set(stopwords.words("english"))
         self.lemmatizer = WordNetLemmatizer()
-        
     def clean_characters(self, text: str) -> str:
         """Remove special characters and convert to lowercase."""
         text = re.sub(r'[^\w\s]','', str(text))
@@ -23,9 +22,13 @@ class TextPreprocessor:
         if not isinstance(text, str):
             return ""
         tokens = word_tokenize(text.lower())
+        start = time.time()
         clean_list = [self.lemmatizer.lemmatize(word) 
                      for word in tokens 
                      if word.isalpha() and word not in self.stop_words]
+        end = time.time()
+        
+        print(f"The time taken to lemmatize is {end-start}")
         return " ".join(clean_list)
     
     def process_tags(self, tags_text: str) -> str:
@@ -176,21 +179,33 @@ class LexiconLoader:
         """Get statistics for a given word."""
         return self.word_stats.get(word, {})
 
-# Example usage
-if __name__ == "__main__":
-    # Process documents
-    doc_processor = DocumentProcessor()
-    processed_docs = doc_processor.process_dataset("test.csv", "processed_articles.json")
+
+def main():
+    # File paths
+    input_file = "test.csv"  # Replace with your CSV file path
+    output_file = "processed_articles.json"
+    lexicon_dir = "lexicon_output"
     
-    # Generate lexicon
+    # Step 1: Process the dataset
+    print("Processing dataset...")
+    document_processor = DocumentProcessor()
+    processed_docs = document_processor.process_dataset(input_file, output_file)
+    print(f"Dataset processed and saved to {output_file}")
+    
+    # Step 2: Generate lexicon
+    print("Generating lexicon...")
     lexicon_generator = LexiconGenerator()
-    lexicon_data, stats_data = lexicon_generator.generate_lexicon(processed_docs, "lexicon_output")
+    lexicon_data, stats_data = lexicon_generator.generate_lexicon(processed_docs, lexicon_dir)
+    print(f"Lexicon and statistics saved to {lexicon_dir}")
     
-    # Load and use lexicon
-    lexicon = LexiconLoader("lexicon_output")
-    
-    # Example lookups
-    word = "example"
-    word_id = lexicon.get_word_id(word)
-    stats = lexicon.get_word_stats(word)
-    print(word,stats)
+    # Step 3: Load and test lexicon
+    print("Loading lexicon...")
+    lexicon_loader = LexiconLoader(lexicon_dir)
+    test_word = "example"  # Replace with a word from your dataset
+    word_id = lexicon_loader.get_word_id(test_word)
+    print(f"Word ID for '{test_word}': {word_id}")
+    print(f"Word stats for '{test_word}': {lexicon_loader.get_word_stats(test_word)}")
+
+# Execute the main function
+if __name__ == "__main__":
+    main()
